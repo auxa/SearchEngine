@@ -8,8 +8,8 @@
   <name>se</name>
   <url>http://maven.apache.org</url>
    <properties>
-	    <maven.compiler.source>1.6</maven.compiler.source>
-	    <maven.compiler.target>1.6</maven.compiler.target>
+	    <maven.compiler.source>1.7</maven.compiler.source>
+	    <maven.compiler.target>1.7</maven.compiler.target>
 	    <lucene.version>7.5.0</lucene.version>
 	     <java.version>10.0.2</java.version>
       </properties>
@@ -19,7 +19,7 @@
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
-      
+
     </dependency>
     <dependency>
         		<groupId>org.apache.lucene</groupId>
@@ -37,7 +37,7 @@
         		<version>${lucene.version}</version>
       	</dependency>
   </dependencies>
-  
+
     <repositories>
         <repository>
             <id>repo-central</id>
@@ -53,15 +53,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

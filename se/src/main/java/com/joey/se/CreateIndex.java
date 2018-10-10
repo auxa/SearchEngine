@@ -57,8 +57,6 @@ public class CreateIndex {
           index++;
           line = bufferedReader.readLine();
           while(!line.contains(".A")){
-            System.out.println("Error A");
-
             line = bufferedReader.readLine();
             if (line.contains(".A")){
               break;
@@ -68,8 +66,6 @@ public class CreateIndex {
             title+=line +" ";
           }
           while( !line.contains(".B")){
-            System.out.println("Error B");
-
             line = bufferedReader.readLine();
             if (line.contains(".B")){
               break;
@@ -77,8 +73,6 @@ public class CreateIndex {
             author+=line +" ";
           }
           while(!line.contains(".W")){
-            System.out.println("Error W");
-
             line = bufferedReader.readLine();
             if (line.contains(".W")){
               break;
@@ -87,7 +81,6 @@ public class CreateIndex {
           }
           while(!line.contains(".I")){
             line = bufferedReader.readLine();
-            System.out.println("Error I" + index + " " + line);
             if (line == null || line.contains(".I")){
               break;
             }
@@ -114,7 +107,7 @@ public class CreateIndex {
 
   private static Document createDoc(int index, String title, String author, String pub, String words) throws IOException {
         Document doc = new Document();
-        doc.add(new TextField("index", index+"", Field.Store.YES));
+				doc.add(new TextField("index", index+"", Field.Store.YES));
         doc.add(new TextField("title", title, Field.Store.YES));
         doc.add(new TextField("author", author, Field.Store.YES));
         doc.add(new TextField("published", pub, Field.Store.YES));

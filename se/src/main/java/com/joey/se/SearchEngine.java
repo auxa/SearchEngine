@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.io.*;
 
-
-
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -21,30 +19,16 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.document.Document;
-
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.DirectoryReader;
-
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.*;
 import org.apache.lucene.analysis.core.StopAnalyzer;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.search.similarities.*;
@@ -53,21 +37,17 @@ public class SearchEngine {
           private static String INDEX_DIRECTORY = "../index";
           private static int MAX_RESULTS = 30;
           public static void main(String[] args) throws Exception {
-            // Open the folder that contains our search index
+
             Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
             IndexReader ireader = DirectoryReader.open(directory);
-            // create objects to read and search across the index
             IndexSearcher isearcher = new IndexSearcher(ireader);
-					 	isearcher.setSimilarity(new ClassicSimilarity());
+					 	isearcher.setSimilarity(new BooleanSimilarity());
             Map<String, Float> boost = createBoostMap();
-            // builder class for creating our query
             CharArraySet myStopSet = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
 
             Analyzer analyzer = new Joeylse(myStopSet);
 
             MultiFieldQueryParser qp = new MultiFieldQueryParser(new String[] {"title", "published", "author", "content"}, analyzer, boost);
-            // Some words that we want to find and the field in which we expect
-            // to find them
             ArrayList<String> loadedQueries = loadQueriesFromFile();
             ArrayList<String> vars = new ArrayList<String>();
             for (int j=0; loadedQueries.size()>j; j++){
@@ -86,20 +66,15 @@ public class SearchEngine {
                 for (int i = 0; i < hits.length; i++) {
                   Document hitDoc = isearcher.doc(hits[i].doc);
                   int rank = i+1;
-                  int noms = normScore("Classic", hits[i].score);
+                  int noms = normScore("Other", hits[i].score);
                   if (noms >0){
                     vars.add(j+1 + " 0 " + hitDoc.get("index") + " "+ rank + " "+ noms  +" EXP \n");
                   }
-
                 }
-
               }
-
             }
 
             writeToFile(vars);
-
-            // close everything we used
             ireader.close();
             directory.close();
           }
@@ -114,8 +89,6 @@ public class SearchEngine {
       private static void writeToFile(ArrayList<String> results){
         BufferedWriter writer = null;
         try {
-            //create a temporary file
-            // This will output the full path where the file will be written to...
             File logFile = new File("results.txt");
             writer = new BufferedWriter(new FileWriter(logFile));
             for (String res : results){
@@ -125,7 +98,6 @@ public class SearchEngine {
               e.printStackTrace();
           } finally {
               try {
-                  // Close the writer regardless of what happens...
                   writer.close();
               } catch (Exception e) {
               }

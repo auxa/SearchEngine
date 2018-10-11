@@ -29,7 +29,7 @@ public class CreateIndex {
 		// Analyzer that is used to process TextField
 
 		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
-		IndexWriterConfig indexWriterConfig = createIndexWithUserRank(analyzer, "Classic");
+		IndexWriterConfig indexWriterConfig = createIndexWithUserRank(analyzer, "Boolean");
 
 		indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 

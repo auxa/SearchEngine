@@ -47,6 +47,7 @@ import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.analysis.core.StopAnalyzer;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.search.similarities.*;
 
 public class SearchEngine {
           private static String INDEX_DIRECTORY = "../index";
@@ -57,14 +58,14 @@ public class SearchEngine {
             IndexReader ireader = DirectoryReader.open(directory);
             // create objects to read and search across the index
             IndexSearcher isearcher = new IndexSearcher(ireader);
+					 	isearcher.setSimilarity(new ClassicSimilarity());
             Map<String, Float> boost = createBoostMap();
             // builder class for creating our query
             CharArraySet myStopSet = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
 
-            String field = "contents";
             Analyzer analyzer = new Joeylse(myStopSet);
 
-            QueryParser qp = new MultiFieldQueryParser(new String[] {"title", "published", "author", "content"}, analyzer, boost);
+            MultiFieldQueryParser qp = new MultiFieldQueryParser(new String[] {"title", "published", "author", "content"}, analyzer, boost);
             // Some words that we want to find and the field in which we expect
             // to find them
             ArrayList<String> loadedQueries = loadQueriesFromFile();
@@ -75,6 +76,7 @@ public class SearchEngine {
               if (q.length() >0){
                 Query query = null;
                 String stringify = QueryParser.escape(q);
+
                 try{
                   query = qp.parse(stringify);
                 } catch (ParseException e){
@@ -84,13 +86,12 @@ public class SearchEngine {
                 for (int i = 0; i < hits.length; i++) {
                   Document hitDoc = isearcher.doc(hits[i].doc);
                   int rank = i+1;
-                  int noms = normScore(hits[i].score);
+                  int noms = normScore("Classic", hits[i].score);
                   if (noms >0){
                     vars.add(j+1 + " 0 " + hitDoc.get("index") + " "+ rank + " "+ noms  +" EXP \n");
                   }
 
                 }
-
 
               }
 
@@ -104,10 +105,10 @@ public class SearchEngine {
           }
       private static Map<String, Float> createBoostMap(){
         Map<String, Float> boost = new HashMap<>();
-        boost.put("title", (float) 0.62);
-        boost.put("published",(float) 0.03);
-        boost.put("author", (float) 0.1);
-        boost.put("content", (float) 0.35);
+        boost.put("title", (float) 0.45);
+        boost.put("published",(float) 0.11);
+        boost.put("author", (float) 0.02);
+        boost.put("content", (float) 0.41);
         return boost;
       }
       private static void writeToFile(ArrayList<String> results){
@@ -146,7 +147,7 @@ public class SearchEngine {
                 line = bufferedReader.readLine();
               }
               while(line != null && !line.contains(".I") ){
-                qry += line;
+                qry += " " + line;
                 line = bufferedReader.readLine();
               }
               al.add(qry);
@@ -165,22 +166,42 @@ public class SearchEngine {
       }
       return null;
     }
-    private static int normScore(double score){
-      if (score > 12){
-        return 5;
-      }
-      else if (score >10) {
-        return 4;
-      }
-      else if(score>8 ){
-        return 3;
-      }else if(score>6){
-        return 2;
-      }else if(score >5){
-        return 1;
-      }
-      else{
-        return -1;
-      }
+    private static int normScore(String eval, double score){
+			if(!eval.equals("Classic")){
+				if (score > 12.7){
+					return 5;
+				}
+				else if (score >10.4) {
+					return 4;
+				}
+				else if(score>8.15 ){
+					return 3;
+				}else if(score>6.0){
+					return 2;
+				}else if(score >4){
+					return 1;
+				}
+				else{
+					return -1;
+				}
+			}else{
+				if (score > 5){
+					return 5;
+				}
+				else if (score >4) {
+					return 4;
+				}
+				else if(score>3 ){
+					return 3;
+				}else if(score>2){
+					return 2;
+				}else if(score >1){
+					return 1;
+				}
+				else{
+					return -1;
+				}
+			}
+
     }
 }

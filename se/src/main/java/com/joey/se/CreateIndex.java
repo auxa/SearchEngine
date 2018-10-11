@@ -14,7 +14,7 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.analysis.core.StopAnalyzer;
-// import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.search.similarities.*;
 
 public class CreateIndex {
 
@@ -22,17 +22,18 @@ public class CreateIndex {
 	private static String INDEX_DIRECTORY = "../index";
 
 	public static void main(String[] args) throws IOException {
-    CharArraySet myStopSet = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
+		CharArraySet stopwords = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
+
+		Analyzer analyzer = new Joeylse(stopwords);
 
 		// Analyzer that is used to process TextField
-		Joeylse analyzer = new Joeylse(myStopSet);
 
 		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
-		IndexWriterConfig config = new IndexWriterConfig(analyzer);
+		IndexWriterConfig indexWriterConfig = createIndexWithUserRank(analyzer, "Classic");
 
-		config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+		indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 
-		IndexWriter iwriter = new IndexWriter(directory, config);
+		IndexWriter iwriter = new IndexWriter(directory, indexWriterConfig);
 
     iwriter = addDocuments(iwriter);
 
@@ -103,8 +104,25 @@ public class CreateIndex {
 
        }
       return iw;
-   }
+  }
 
+	 private static IndexWriterConfig createIndexWithUserRank(Analyzer analyzer, String rankingModel) {
+
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+
+			switch (rankingModel) {
+					case "BM25":
+							return indexWriterConfig.setSimilarity(new BM25Similarity());
+					case "Boolean":
+							return indexWriterConfig.setSimilarity(new BooleanSimilarity());
+					case "Classic":
+							return indexWriterConfig.setSimilarity(new ClassicSimilarity());
+					case "lm_dirichlet":
+							return indexWriterConfig.setSimilarity(new LMDirichletSimilarity());
+					default:
+							return null;
+			}
+	}
   private static Document createDoc(int index, String title, String author, String pub, String words) throws IOException {
         Document doc = new Document();
 				doc.add(new TextField("index", index+"", Field.Store.YES));
@@ -115,6 +133,7 @@ public class CreateIndex {
 
         // use a string field for isbn because we don't want it tokenized
         return doc;
-    }
+  }
+
 
 }

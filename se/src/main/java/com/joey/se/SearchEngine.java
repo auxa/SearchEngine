@@ -41,11 +41,11 @@ public class SearchEngine {
             Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
             IndexReader ireader = DirectoryReader.open(directory);
             IndexSearcher isearcher = new IndexSearcher(ireader);
-					 	isearcher.setSimilarity(new BooleanSimilarity());
+					 	isearcher.setSimilarity(new BM25Similarity());
             Map<String, Float> boost = createBoostMap();
-            CharArraySet myStopSet = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
+            CharArraySet stopWords = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
 
-            Analyzer analyzer = new Joeylse(myStopSet);
+            Analyzer analyzer = new Joeylse(stopWords);
 
             MultiFieldQueryParser qp = new MultiFieldQueryParser(new String[] {"title", "published", "author", "content"}, analyzer, boost);
             ArrayList<String> loadedQueries = loadQueriesFromFile();
@@ -66,7 +66,7 @@ public class SearchEngine {
                 for (int i = 0; i < hits.length; i++) {
                   Document hitDoc = isearcher.doc(hits[i].doc);
                   int rank = i+1;
-                  int noms = normScore("Other", hits[i].score);
+                  double noms = normScore("Other", hits[i].score);
                   if (noms >0){
                     vars.add(j+1 + " 0 " + hitDoc.get("index") + " "+ rank + " "+ noms  +" EXP \n");
                   }
@@ -80,10 +80,10 @@ public class SearchEngine {
           }
       private static Map<String, Float> createBoostMap(){
         Map<String, Float> boost = new HashMap<>();
-        boost.put("title", (float) 0.45);
-        boost.put("published",(float) 0.11);
+        boost.put("title", (float) 0.35);
+        boost.put("published",(float) 0.01);
         boost.put("author", (float) 0.02);
-        boost.put("content", (float) 0.41);
+        boost.put("content", (float) 0.61);
         return boost;
       }
       private static void writeToFile(ArrayList<String> results){
@@ -138,42 +138,8 @@ public class SearchEngine {
       }
       return null;
     }
-    private static int normScore(String eval, double score){
-			if(!eval.equals("Classic")){
-				if (score > 12.7){
-					return 5;
-				}
-				else if (score >10.4) {
-					return 4;
-				}
-				else if(score>8.15 ){
-					return 3;
-				}else if(score>6.0){
-					return 2;
-				}else if(score >4){
-					return 1;
-				}
-				else{
-					return -1;
-				}
-			}else{
-				if (score > 5){
-					return 5;
-				}
-				else if (score >4) {
-					return 4;
-				}
-				else if(score>3 ){
-					return 3;
-				}else if(score>2){
-					return 2;
-				}else if(score >1){
-					return 1;
-				}
-				else{
-					return -1;
-				}
-			}
+    private static double normScore(String eval, double score){
+			return score;
 
     }
 }

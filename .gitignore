@@ -29,3 +29,5 @@ hs_err_pid*
 /.recommenders/
 /cran/
 /index/
+/se/luke/
+/se/results.txt

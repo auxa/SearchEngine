@@ -26,10 +26,9 @@ public class CreateIndex {
 
 		Analyzer analyzer = new Joeylse(stopwords);
 
-		// Analyzer that is used to process TextField
-
 		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
-		IndexWriterConfig indexWriterConfig = createIndexWithUserRank(analyzer, "Boolean");
+		
+		IndexWriterConfig indexWriterConfig = createIndexWithUserRank(analyzer, "BM25");
 
 		indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 

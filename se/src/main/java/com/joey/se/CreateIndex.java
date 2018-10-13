@@ -27,8 +27,8 @@ public class CreateIndex {
 		Analyzer analyzer = new Joeylse(stopwords);
 
 		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
-		
-		IndexWriterConfig indexWriterConfig = createIndexWithUserRank(analyzer, "BM25");
+
+		IndexWriterConfig indexWriterConfig = createIndexWithUserRank(analyzer, "Classic");
 
 		indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 
@@ -36,7 +36,6 @@ public class CreateIndex {
 
     iwriter = addDocuments(iwriter);
 
-		// Commit changes and close everything
 		iwriter.close();
 		directory.close();
 

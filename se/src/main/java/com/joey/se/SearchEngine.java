@@ -41,7 +41,7 @@ public class SearchEngine {
             Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
             IndexReader ireader = DirectoryReader.open(directory);
             IndexSearcher isearcher = new IndexSearcher(ireader);
-					 	isearcher.setSimilarity(new BM25Similarity());
+					 	isearcher.setSimilarity(new ClassicSimilarity());
             Map<String, Float> boost = createBoostMap();
             CharArraySet stopWords = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
 

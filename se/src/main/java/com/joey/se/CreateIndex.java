@@ -123,7 +123,7 @@ public class CreateIndex {
 	}
   private static Document createDoc(int index, String title, String author, String pub, String words) throws IOException {
         Document doc = new Document();
-				doc.add(new TextField("index", index+"", Field.Store.YES));
+				doc.add(new TextField("index", index+"", Field.Store.NO));
         doc.add(new TextField("title", title, Field.Store.YES));
         doc.add(new TextField("author", author, Field.Store.YES));
         doc.add(new TextField("published", pub, Field.Store.YES));

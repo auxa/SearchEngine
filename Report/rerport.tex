@@ -6,10 +6,10 @@
 \subsection{Preprocessing Documents}
   The first step in creating the search engine was to process and index all of the documents required. For this I created a simple parser for the entire "Cranfield 1400" file. The parser would read the file in line by line. Each line would then be added to an variable  depending on it's context, ie. if it was a Index, Title, Author, Bibliography or Content. Once the context looped around to the starter context, the variables would be used to create a new document. \par
   Once all the documents were created, they were added to an `IndexWriter` object and then written to a `Directory` stored on Disk. The directory was then analysed using a custom analyser that I created. The analyser removed stop words, normalised characters to lower case and stemmed the words.\par
-  In each of the documents the Title, Author, Bibliography and Content were stored as an indexable field using `Field.Store.YES`, the "Index" of each document was stored as a non-indexable field by using "Field.Store.NO".
+  In each of the documents the Title, Author, Bibliography and Content were stored as an indexable field using `Field.Store.YES`, the "Index" of each document was stored as an indexable field but later in the search mechanism I assigned it a weighting of zero.
 \begin{lstlisting}
 Document d = new Document()
-d.add(new TextField("index", Field.Store.NO))
+d.add(new TextField("index", Field.Store.YES))
 d.add(new TextField("title", Field.Store.YES))
 d.add(new TextField("author", Field.Store.YES))
 d.add(new TextField("bib", Field.Store.YES))
@@ -91,4 +91,17 @@ IndexWriter iwriter =
 \section{Conclusion}
 From writing the Search Engine with the lucene library, I have been able to explore the information retrieval process in greater detail. Being able to compare the impact of different techniques, such as stemming and stop-word removal, showed their significance. As a whole, it take a combination of a lot of different factors to create a search engine capable of returning significant results. \par
 While my implementation produced some good results, it did lack in a few areas. As I already had a predefined set of queries I was able to tailor the documents weighting to be skewed a bit towards those queries rather than general searches. Unfortunately we don't live in a perfect world and have access to a predefined set of queries, so this did limit the search engine as a general searching mechanism. 
-  
+
+\section{AWS information}
+
+When running the files from AWS the following steps need to be made.
+\begin{enumerate}
+\item Log onto the AWS instance using the credentials.
+\item Download the "Search Engine" Directory
+\item Run "mvn package in the "SearchEngine" folder
+\item Run "java -cp target/se-1.0-SNAPSHOT.jar com.joey.se.CreateIndex"
+\item Run "java -cp target/se-1.0-SNAPSHOT.jar com.joey.se.SearchEngine"
+\item Results will be outputted to the SearchEngine folder in "results.txt".
+\item Run "Trec Eval" on the outputted results.txt.
+\end{enumerate}
+If you would like to change the Similarity Scoring, change the similarity argument in the "setSimilarity" function in both the CreateIndex and SearchEngine files.

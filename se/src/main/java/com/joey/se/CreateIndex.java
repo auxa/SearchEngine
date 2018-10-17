@@ -28,7 +28,9 @@ public class CreateIndex {
 
 		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
 
-		IndexWriterConfig indexWriterConfig = createIndexWithUserRank(analyzer, "Classic");
+		IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+		// Change the "ClassicSimilarity" to change similarity scoring
+	  indexWriterConfig = indexWriterConfig.setSimilarity(new ClassicSimilarity());
 
 		indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 
@@ -42,7 +44,7 @@ public class CreateIndex {
 	}
 
   private static IndexWriter addDocuments(IndexWriter iw){
-    String docPath = "/home/joey/Documents/InfoRet/searchEngine/cran/cran.all.1400";
+    String docPath = "../cran/cran.all.1400";
     try {
       FileReader fileReader = new FileReader(docPath);
       BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -103,33 +105,13 @@ public class CreateIndex {
        }
       return iw;
   }
-
-	 private static IndexWriterConfig createIndexWithUserRank(Analyzer analyzer, String rankingModel) {
-
-			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
-
-			switch (rankingModel) {
-					case "BM25":
-							return indexWriterConfig.setSimilarity(new BM25Similarity());
-					case "Boolean":
-							return indexWriterConfig.setSimilarity(new BooleanSimilarity());
-					case "Classic":
-							return indexWriterConfig.setSimilarity(new ClassicSimilarity());
-					case "lm_dirichlet":
-							return indexWriterConfig.setSimilarity(new LMDirichletSimilarity());
-					default:
-							return null;
-			}
-	}
   private static Document createDoc(int index, String title, String author, String pub, String words) throws IOException {
         Document doc = new Document();
-				doc.add(new TextField("index", index+"", Field.Store.NO));
+				doc.add(new TextField("index", index+"", Field.Store.YES));
         doc.add(new TextField("title", title, Field.Store.YES));
         doc.add(new TextField("author", author, Field.Store.YES));
         doc.add(new TextField("published", pub, Field.Store.YES));
         doc.add(new TextField("content", words, Field.Store.YES));
-
-        // use a string field for isbn because we don't want it tokenized
         return doc;
   }
 

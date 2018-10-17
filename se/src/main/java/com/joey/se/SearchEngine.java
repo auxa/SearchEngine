@@ -41,6 +41,7 @@ public class SearchEngine {
             Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
             IndexReader ireader = DirectoryReader.open(directory);
             IndexSearcher isearcher = new IndexSearcher(ireader);
+            // Change the "ClassicSimilarity" to change similarity scoring
 					 	isearcher.setSimilarity(new ClassicSimilarity());
             Map<String, Float> boost = createBoostMap();
             CharArraySet stopWords = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
@@ -104,7 +105,7 @@ public class SearchEngine {
           }
       }
       private static ArrayList<String> loadQueriesFromFile() {
-        String docPath = "/home/joey/Documents/InfoRet/searchEngine/cran/cran.qry";
+        String docPath = "../cran/cran.qry";
         try {
           ArrayList<String> al = new ArrayList<String>();
           FileReader fileReader = new FileReader(docPath);

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.15)  15 OCT 2018 14:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.15)  15 OCT 2018 15:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1079,7 +1079,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-(./samplebody-journals.tex
+(./rerport.tex
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
 (Font)              scaled to size 9.0pt on input line 1.
 
@@ -1124,12 +1124,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 54--70
 [1.1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 ]
-Overfull \hbox (16.05515pt too wide) in paragraph at lines 82--83
+Overfull \hbox (16.05515pt too wide) in paragraph at lines 83--84
 [][][][][][][][][][][] 
  []
 
 
-Overfull \hbox (10.65509pt too wide) in paragraph at lines 83--84
+Overfull \hbox (10.65509pt too wide) in paragraph at lines 84--85
 [][][][][][][][][][][][][] 
  []
 
@@ -1147,11 +1147,11 @@ Package rerunfilecheck Info: File `sample-acmtog.out' has not changed.
  )
 (\end occurred when \iffalse on line 38 was incomplete) 
 Here is how much of TeX's memory you used:
- 19503 strings out of 492982
- 292307 string characters out of 6134895
- 430383 words of memory out of 5000000
+ 19506 strings out of 492982
+ 292346 string characters out of 6134895
+ 430374 words of memory out of 5000000
  22441 multiletter control sequences out of 15000+600000
- 79377 words of font info for 130 fonts, out of 8000000 for 9000
+ 79650 words of font info for 132 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
  60i,11n,94p,847b,900s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texm
@@ -1160,7 +1160,7 @@ f-dist/fonts/enc/dvips/libertine/lbtn_naooyc.enc}{/usr/share/texlive/texmf-dist
 /enc/dvips/libertine/lbtn_25tcsq.enc}</usr/share/texlive/texmf-dist/fonts/type1
 /public/libertine/LinBiolinumT.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
 ublic/libertine/LinLibertineT.pfb>
-Output written on sample-acmtog.pdf (2 pages, 158789 bytes).
+Output written on sample-acmtog.pdf (2 pages, 160006 bytes).
 PDF statistics:
  95 PDF objects out of 1000 (max. 8388607)
  82 compressed objects within 1 object stream
